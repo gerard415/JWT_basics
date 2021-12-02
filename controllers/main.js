@@ -20,23 +20,12 @@ const login =  async (req, res)=>{
 }
 
 
-const dashboard = async(req,res)=>{
+const dashboard = async (req,res)=>{
+    console.log(req.user)
+    const luckyNumber = Math.floor(Math.random()*100)
 
-    const authHead = req.headers.authorization
+    res.status(200).json({msg: `Hello, ${req.user.username}` , secret: `Here is your authorized data: ${luckyNumber}`})
 
-    if(!authHead || !authHead.startsWith('Bearer ')){
-        throw new CustomAPIError('No token provided', 401)
-    }
-
-    const token = authHead.split(' ')[1]
-    try {
-        const decoded = jwt.verify(token, process.env.jwt_secret)
-
-        const luckyNumber = Math.floor(Math.random()*100)
-        res.status(200).json({msg: `Hello, ${decoded.username}` , secret: `Here is your authorized data: ${luckyNumber}`})
-    } catch (error) {
-        throw new CustomAPIError('You are not authourized to access this page', 401)
-    }
 }
 
 module.exports = {login, dashboard}
